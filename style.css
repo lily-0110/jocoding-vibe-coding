@@ -1,49 +1,102 @@
 
+:root {
+    --bg-color: #f0f0f0;
+    --container-bg: transparent;
+    --text-color: #333;
+    --button-bg: #4CAF50;
+    --button-text: white;
+    --number-bg: #fff;
+    --number-text: #333;
+    --shadow: rgba(0,0,0,0.2);
+}
+
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #f0f0f0;
+    --button-bg: #2e7d32;
+    --button-text: #e0e0e0;
+    --number-bg: #333;
+    --number-text: #fff;
+    --shadow: rgba(255,255,255,0.1);
+}
+
 body {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
     text-align: center;
+    padding: 2rem;
+    background-color: var(--container-bg);
+    border-radius: 15px;
 }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+#toggle-btn {
+    background: none;
+    border: 2px solid var(--button-bg);
+    color: var(--text-color);
+    padding: 8px 16px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+#toggle-btn:hover {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+button#generate {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 15px 32px;
+    font-size: 18px;
+    margin: 20px 0;
+    cursor: pointer;
+    border-radius: 30px;
     border: none;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: transform 0.1s, box-shadow 0.3s;
+}
+
+button#generate:active {
+    transform: scale(0.95);
 }
 
 .numbers-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
 }
 
 .number {
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
+    width: 60px;
+    height: 60px;
+    background-color: var(--number-bg);
+    color: var(--number-text);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 5px;
     font-size: 24px;
     font-weight: bold;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px var(--shadow);
+    transition: all 0.3s;
 }
