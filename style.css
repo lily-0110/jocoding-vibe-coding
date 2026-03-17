@@ -118,6 +118,57 @@ body {
     transform: translateY(-2px);
 }
 
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.share-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.share-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Specific colors for branding */
+.share-button.facebook {
+    background-color: #3b5998;
+}
+.share-button.facebook:hover {
+    background-color: #2d4373;
+}
+
+.share-button.twitter {
+    background-color: #1DA1F2;
+}
+.share-button.twitter:hover {
+    background-color: #0c85d0;
+}
+
+.share-button.kakaotalk {
+    background-color: #FEE500;
+    color: #3C1E1E; /* Dark text for bright background */
+}
+.share-button.kakaotalk:hover {
+    background-color: #e0cd00;
+}
+
 .contact-section {
     margin-top: 50px;
     text-align: left;
