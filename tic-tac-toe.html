@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="google-adsense-account" content="ca-pub-5274749114692650">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5274749114692650"
+     crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E1YSG5PYL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4E1YSG5PYL');
+    </script>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "vx0a7gvvnm");
+    </script>
+    <style>
+        .game-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--number-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow);
+            max-width: 320px; /* Adjust for Tic-Tac-Toe grid */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            width: 315px; /* 3*100px + 2*5px */
+            margin: 20px auto;
+            background-color: var(--text-color);
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: var(--button-bg); /* For X and O */
+        }
+        .cell:hover {
+            background-color: var(--shadow);
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .reset-button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: opacity 0.3s;
+        }
+        .reset-button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="toggle-btn">Dark Mode</button>
+    </div>
+    <div class="container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="game-area">
+            <div class="board" id="gameBoard">
+                <div class="cell" data-cell-index="0"></div>
+                <div class="cell" data-cell-index="1"></div>
+                <div class="cell" data-cell-index="2"></div>
+                <div class="cell" data-cell-index="3"></div>
+                <div class="cell" data-cell-index="4"></div>
+                <div class="cell" data-cell-index="5"></div>
+                <div class="cell" data-cell-index="6"></div>
+                <div class="cell" data-cell-index="7"></div>
+                <div class="cell" data-cell-index="8"></div>
+            </div>
+            <p class="status" id="gameStatus">Player X's Turn</p>
+            <button class="reset-button" id="resetButton">Reset Game</button>
+        </div>
+        <p><a href="index.html" class="play-button">Back to Game List</a></p>
+    </div>
+    <footer>
+        <p>&copy; 2024 Mini Game Collection. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const gameBoard = document.getElementById('gameBoard');
+        const cells = document.querySelectorAll('.cell');
+        const gameStatus = document.getElementById('gameStatus');
+        const resetButton = document.getElementById('resetButton');
+
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let board = ['', '', '', '', '', '', '', '', ''];
+
+        const winningConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+
+        function handleCellClick(clickedCellEvent) {
+            const clickedCell = clickedCellEvent.target;
+            const clickedCellIndex = parseInt(clickedCell.getAttribute('data-cell-index'));
+
+            if (board[clickedCellIndex] !== '' || !gameActive) {
+                return;
+            }
+
+            board[clickedCellIndex] = currentPlayer;
+            clickedCell.textContent = currentPlayer;
+
+            checkResult();
+        }
+
+        function checkResult() {
+            let roundWon = false;
+            for (let i = 0; i < winningConditions.length; i++) {
+                const winCondition = winningConditions[i];
+                const a = board[winCondition[0]];
+                const b = board[winCondition[1]];
+                const c = board[winCondition[2]];
+
+                if (a === '' || b === '' || c === '') {
+                    continue;
+                }
+                if (a === b && b === c) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                gameStatus.textContent = `Player ${currentPlayer} has won!`;
+                gameActive = false;
+                return;
+            }
+
+            const roundDraw = !board.includes('');
+            if (roundDraw) {
+                gameStatus.textContent = 'Game ended in a draw!';
+                gameActive = false;
+                return;
+            }
+
+            switchPlayer();
+        }
+
+        function switchPlayer() {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            gameStatus.textContent = `Player ${currentPlayer}'s Turn`;
+        }
+
+        function resetGame() {
+            gameActive = true;
+            currentPlayer = 'X';
+            board = ['', '', '', '', '', '', '', '', ''];
+            gameStatus.textContent = `Player ${currentPlayer}'s Turn`;
+            cells.forEach(cell => (cell.textContent = ''));
+        }
+
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+        resetButton.addEventListener('click', resetGame);
+
+        // Theme toggle logic
+        const toggleBtn = document.getElementById('toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                toggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            });
+
+            // Set initial theme
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                toggleBtn.textContent = 'Light Mode';
+            } else {
+                toggleBtn.textContent = 'Dark Mode';
+            }
+        }
+    </script>
+</body>
+</html>

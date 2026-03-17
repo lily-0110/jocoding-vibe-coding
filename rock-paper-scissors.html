@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="google-adsense-account" content="ca-pub-5274749114692650">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5274749114692650"
+     crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E1YSG5PYL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4E1YSG5PYL');
+    </script>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "vx0a7gvvnm");
+    </script>
+    <style>
+        .game-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--number-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .choices button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: opacity 0.3s;
+        }
+        .choices button:hover {
+            opacity: 0.9;
+        }
+        .result p {
+            margin-top: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="toggle-btn">Dark Mode</button>
+    </div>
+    <div class="container">
+        <h1>Rock Paper Scissors</h1>
+        <div class="game-area">
+            <p>Choose your move:</p>
+            <div class="choices">
+                <button id="rock">Rock</button>
+                <button id="paper">Paper</button>
+                <button id="scissors">Scissors</button>
+            </div>
+            <div class="result">
+                <p id="playerChoice">Your choice: </p>
+                <p id="computerChoice">Computer's choice: </p>
+                <p id="gameResult">Result: </p>
+            </div>
+        </div>
+        <p><a href="index.html" class="play-button">Back to Game List</a></p>
+    </div>
+    <footer>
+        <p>&copy; 2024 Mini Game Collection. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const choices = ['Rock', 'Paper', 'Scissors'];
+        const rockBtn = document.getElementById('rock');
+        const paperBtn = document.getElementById('paper');
+        const scissorsBtn = document.getElementById('scissors');
+        const playerChoiceElem = document.getElementById('playerChoice');
+        const computerChoiceElem = document.getElementById('computerChoice');
+        const gameResultElem = document.getElementById('gameResult');
+
+        function playGame(playerChoice) {
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            playerChoiceElem.textContent = `Your choice: ${playerChoice}`;
+            computerChoiceElem.textContent = `Computer's choice: ${computerChoice}`;
+            gameResultElem.textContent = `Result: ${getWinner(playerChoice, computerChoice)}`;
+        }
+
+        function getWinner(player, computer) {
+            if (player === computer) {
+                return 'It\'s a tie!';
+            } else if (
+                (player === 'Rock' && computer === 'Scissors') ||
+                (player === 'Paper' && computer === 'Rock') ||
+                (player === 'Scissors' && computer === 'Paper')
+            ) {
+                return 'You win!';
+            } else {
+                return 'You lose!';
+            }
+        }
+
+        rockBtn.addEventListener('click', () => playGame('Rock'));
+        paperBtn.addEventListener('click', () => playGame('Paper'));
+        scissorsBtn.addEventListener('click', () => playGame('Scissors'));
+
+        // Theme toggle logic
+        const toggleBtn = document.getElementById('toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                toggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            });
+
+            // Set initial theme
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                toggleBtn.textContent = 'Light Mode';
+            } else {
+                toggleBtn.textContent = 'Dark Mode';
+            }
+        }
+    </script>
+</body>
+</html>
