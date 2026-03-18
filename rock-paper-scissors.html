@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,24 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
     <link rel="stylesheet" href="style.css">
-    <meta name="google-adsense-account" content="ca-pub-5274749114692650">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5274749114692650"
-     crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E1YSG5PYL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-4E1YSG5PYL');
-    </script>
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "vx0a7gvvnm");
-    </script>
     <style>
         .game-area {
             margin-top: 30px;
@@ -30,6 +13,17 @@
             background-color: var(--number-bg);
             border-radius: 10px;
             box-shadow: 0 4px 8px var(--shadow);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
             max-width: 400px;
             margin-left: auto;
             margin-right: auto;
@@ -61,6 +55,14 @@
     </div>
     <div class="container">
         <h1>Rock Paper Scissors</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>가위(Scissors), 바위(Rock), 보(Paper) 중 하나를 선택하세요.</li>
+                <li>컴퓨터도 랜덤하게 하나를 선택합니다.</li>
+                <li>상성에 따라 승패가 결정됩니다. (바위 > 가위 > 보 > 바위)</li>
+            </ul>
+        </div>
         <div class="game-area">
             <p>Choose your move:</p>
             <div class="choices">
@@ -76,9 +78,6 @@
         </div>
         <p><a href="index.html" class="play-button">Back to Game List</a></p>
     </div>
-    <footer>
-        <p>&copy; 2024 Mini Game Collection. All rights reserved.</p>
-    </footer>
 
     <script>
         const choices = ['Rock', 'Paper', 'Scissors'];
@@ -97,24 +96,15 @@
         }
 
         function getWinner(player, computer) {
-            if (player === computer) {
-                return 'It\'s a tie!';
-            } else if (
-                (player === 'Rock' && computer === 'Scissors') ||
-                (player === 'Paper' && computer === 'Rock') ||
-                (player === 'Scissors' && computer === 'Paper')
-            ) {
-                return 'You win!';
-            } else {
-                return 'You lose!';
-            }
+            if (player === computer) return 'It\'s a tie!';
+            if ((player === 'Rock' && computer === 'Scissors') || (player === 'Paper' && computer === 'Rock') || (player === 'Scissors' && computer === 'Paper')) return 'You win!';
+            return 'You lose!';
         }
 
         rockBtn.addEventListener('click', () => playGame('Rock'));
         paperBtn.addEventListener('click', () => playGame('Paper'));
         scissorsBtn.addEventListener('click', () => playGame('Scissors'));
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
@@ -123,14 +113,10 @@
                 localStorage.setItem('darkMode', isDarkMode);
                 toggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
             });
-
-            // Set initial theme
             const savedDarkMode = localStorage.getItem('darkMode');
             if (savedDarkMode === 'true') {
                 document.body.classList.add('dark-mode');
                 toggleBtn.textContent = 'Light Mode';
-            } else {
-                toggleBtn.textContent = 'Dark Mode';
             }
         }
     </script>

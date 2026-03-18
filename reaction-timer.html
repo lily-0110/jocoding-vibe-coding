@@ -28,6 +28,17 @@
             background-color: #ffeb3b;
             color: black;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +47,14 @@
     </div>
     <div class="container">
         <h1>Reaction Timer</h1>
-        <p>Test your reaction speed!</p>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>화면의 박스를 클릭하여 테스트를 시작하세요.</li>
+                <li>박스 색상이 노란색에서 초록색(CLICK!)으로 변할 때까지 기다리세요.</li>
+                <li>초록색이 되는 순간 최대한 빠르게 박스를 클릭하여 기록을 확인하세요.</li>
+            </ul>
+        </div>
         <div class="reaction-box" id="reactionBox">Click to Start</div>
         <div id="game-over" style="display: none;">
             <h2 id="final-score-msg"></h2>
@@ -53,7 +71,7 @@
 
         let startTime;
         let timeout;
-        let state = 'idle'; // idle, waiting, ready, finished
+        let state = 'idle';
 
         function startTest() {
             state = 'waiting';
@@ -97,7 +115,6 @@
             gameOverDiv.style.display = 'none';
         });
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {

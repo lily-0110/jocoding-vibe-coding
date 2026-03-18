@@ -28,6 +28,17 @@
             font-size: 1.5em;
             color: #776e65;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .cell-2048[data-value="2"] { background-color: #eee4da; }
         .cell-2048[data-value="4"] { background-color: #ede0c8; }
         .cell-2048[data-value="8"] { background-color: #f2b179; color: #f9f6f2; }
@@ -47,13 +58,20 @@
     </div>
     <div class="container">
         <h1>2048 Game</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>방향키(↑, ↓, ←, →)를 눌러 모든 타일을 해당 방향으로 이동시킵니다.</li>
+                <li>같은 숫자를 가진 두 타일이 충돌하면 하나로 합쳐지며 숫자가 두 배가 됩니다.</li>
+                <li>최종적으로 숫자 2048이 적힌 타일을 만드는 것이 목표입니다.</li>
+            </ul>
+        </div>
         <p>Score: <span id="score">0</span></p>
         <div class="grid-2048" id="grid"></div>
         <div id="game-over" style="display: none;">
             <h2 id="final-score-msg"></h2>
             <button id="restart-btn" class="play-button">Play Again</button>
         </div>
-        <p>Use Arrow Keys to move tiles</p>
         <p><a href="index.html" class="play-button">Back to Game List</a></p>
     </div>
 
@@ -109,11 +127,7 @@
 
             rows.forEach((row, i) => {
                 if (direction === 'right' || direction === 'down') row.reverse();
-                const originalRow = [...row];
-                
-                // Slide
                 let filteredRow = row.filter(val => val !== 0);
-                // Merge
                 for (let j = 0; j < filteredRow.length - 1; j++) {
                     if (filteredRow[j] === filteredRow[j + 1]) {
                         filteredRow[j] *= 2;
@@ -122,10 +136,7 @@
                     }
                 }
                 while (filteredRow.length < 4) filteredRow.push(0);
-                
                 if (direction === 'right' || direction === 'down') filteredRow.reverse();
-                
-                // Update board
                 for (let j = 0; j < 4; j++) {
                     const idx = (direction === 'left' || direction === 'right') ? i * 4 + j : j * 4 + i;
                     if (board[idx] !== filteredRow[j]) hasChanged = true;
@@ -166,7 +177,6 @@
         restartBtn.addEventListener('click', initGame);
         initGame();
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {

@@ -44,6 +44,17 @@
             transform: translateX(-50%);
             font-size: 1.5em;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
@@ -52,6 +63,14 @@
     </div>
     <div class="container">
         <h1>Whack-a-Mole</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>구멍에서 랜덤하게 튀어나오는 두더지를 클릭하세요.</li>
+                <li>두더지를 잡을 때마다 점수가 올라갑니다.</li>
+                <li>30초 동안 얼마나 많은 두더지를 잡을 수 있는지 도전해보세요!</li>
+            </ul>
+        </div>
         <p>Score: <span id="score">0</span> | Time: <span id="timeLeft">30</span>s</p>
         <div class="mole-grid" id="grid">
             <div class="hole"><div class="mole"></div></div>
@@ -146,7 +165,6 @@
 
         startGame();
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {

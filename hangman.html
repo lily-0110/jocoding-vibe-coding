@@ -39,6 +39,17 @@
             font-size: 1.2em;
             margin-bottom: 20px;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
@@ -47,6 +58,14 @@
     </div>
     <div class="container">
         <h1>Hangman Game</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>단어에 들어갈 알파벳을 하나씩 추측하여 선택하세요.</li>
+                <li>틀릴 때마다 행맨의 모습이 하나씩 완성됩니다.</li>
+                <li>6번의 기회 안에 숨겨진 단어를 모두 맞추어야 승리합니다.</li>
+            </ul>
+        </div>
         <div class="hangman-container">
             <div class="hangman-draw" id="hangmanDraw"></div>
             <div class="word-display" id="wordDisplay"></div>
@@ -190,7 +209,6 @@
         restartBtn.addEventListener('click', initGame);
         initGame();
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {

@@ -18,6 +18,17 @@
             font-size: 1.5em;
             margin-bottom: 10px;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
@@ -26,13 +37,20 @@
     </div>
     <div class="container">
         <h1>Flappy Bird Clone</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>Space, 위쪽 방향키(↑), W 키 또는 화면 클릭으로 점프하세요.</li>
+                <li>파이프 사이의 빈 공간을 안전하게 통과해야 합니다.</li>
+                <li>파이프나 화면 아래 바닥에 부딪히면 게임이 종료됩니다.</li>
+            </ul>
+        </div>
         <div class="score-display">Score: <span id="currentScore">0</span></div>
         <canvas id="gameCanvas" width="320" height="480"></canvas>
         <div id="game-over" style="display: none;">
             <h2 id="final-score-msg"></h2>
             <button id="restart-btn" class="play-button">Play Again</button>
         </div>
-        <p>Press Space, Up Arrow, W, or Click to Jump</p>
         <p><a href="index.html" class="play-button">Back to Game List</a></p>
     </div>
 
@@ -66,7 +84,6 @@
             ctx.fillStyle = '#70c5ce';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Bird
             bird.velocity += bird.gravity;
             bird.y += bird.velocity;
 
@@ -77,9 +94,8 @@
             ctx.fillStyle = 'yellow';
             ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
 
-            // Pipes
             if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
-                let pipeGap = 150; // Increased gap from 120 to 150 for easier gameplay
+                let pipeGap = 150;
                 let pipeWidth = 40;
                 let minPipeHeight = 50;
                 let maxPipeHeight = canvas.height - pipeGap - minPipeHeight;
@@ -91,12 +107,9 @@
                 pipes[i].x -= 2;
 
                 ctx.fillStyle = 'green';
-                // Top pipe
                 ctx.fillRect(pipes[i].x, 0, 40, pipes[i].top);
-                // Bottom pipe
                 ctx.fillRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
 
-                // Collision
                 if (bird.x + bird.width > pipes[i].x && bird.x < pipes[i].x + 40) {
                     if (bird.y < pipes[i].top || bird.y + bird.height > canvas.height - pipes[i].bottom) {
                         endGame();
@@ -130,7 +143,7 @@
         window.addEventListener('keydown', (e) => { 
             if (e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
                 jump();
-                e.preventDefault(); // Prevent scrolling
+                e.preventDefault();
             }
         });
         canvas.addEventListener('click', jump);
@@ -138,7 +151,6 @@
 
         startGame();
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {

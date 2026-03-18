@@ -18,6 +18,17 @@
             font-size: 1.5em;
             margin-bottom: 10px;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .controls {
             margin-top: 20px;
             display: grid;
@@ -47,6 +58,14 @@
     </div>
     <div class="container">
         <h1>Snake Game</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>방향키(↑, ↓, ←, →) 또는 W, A, S, D를 사용하여 뱀을 움직이세요.</li>
+                <li>빨간색 먹이를 먹으면 점수가 올라가고 뱀의 몸집이 커집니다.</li>
+                <li>벽에 부딪히거나 자신의 몸에 부딪히면 게임이 종료됩니다.</li>
+            </ul>
+        </div>
         <div class="score-display">Score: <span id="currentScore">0</span></div>
         <canvas id="gameCanvas" width="400" height="400"></canvas>
         <div id="game-over" style="display: none;">
@@ -94,7 +113,7 @@
             gameOverDiv.style.display = 'none';
             canvas.style.display = 'block';
             if (gameInterval) clearInterval(gameInterval);
-            gameInterval = setInterval(drawGame, 150); // Slowed down from 100
+            gameInterval = setInterval(drawGame, 150);
         }
 
         function createFood() {
@@ -161,7 +180,6 @@
         }
 
         function changeDirection(newDx, newDy) {
-            // Prevent 180 degree turns
             if ((newDx === -dx && newDx !== 0) || (newDy === -dy && newDy !== 0)) return;
             nextDx = newDx;
             nextDy = newDy;
@@ -184,7 +202,6 @@
 
         startGame();
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {

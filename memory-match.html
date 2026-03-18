@@ -33,6 +33,17 @@
         .card.matched {
             visibility: hidden;
         }
+        .instructions {
+            background: var(--number-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
@@ -41,6 +52,14 @@
     </div>
     <div class="container">
         <h1>Memory Match</h1>
+        <div class="instructions">
+            <strong>🎮 게임 방법:</strong>
+            <ul>
+                <li>뒷면인 카드를 클릭하여 뒤집으세요.</li>
+                <li>두 카드의 모양이 같으면 화면에서 사라집니다.</li>
+                <li>모든 카드의 짝을 맞추면 성공! 적은 횟수로 도전해보세요.</li>
+            </ul>
+        </div>
         <p>Moves: <span id="moveCount">0</span></p>
         <div class="memory-grid" id="grid"></div>
         <div id="game-over" style="display: none;">
@@ -136,7 +155,6 @@
         restartBtn.addEventListener('click', createBoard);
         createBoard();
 
-        // Theme toggle logic
         const toggleBtn = document.getElementById('toggle-btn');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
