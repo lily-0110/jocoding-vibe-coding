@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        canvas {
+            border: 5px solid var(--button-bg);
+            background-color: #70c5ce;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+        }
+        .score-display {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="toggle-btn">Dark Mode</button>
+    </div>
+    <div class="container">
+        <h1>Flappy Bird Clone</h1>
+        <div class="score-display">Score: <span id="currentScore">0</span></div>
+        <canvas id="gameCanvas" width="320" height="480"></canvas>
+        <div id="game-over" style="display: none;">
+            <h2 id="final-score-msg"></h2>
+            <button id="restart-btn" class="play-button">Play Again</button>
+        </div>
+        <p>Press Space or Click to Jump</p>
+        <p><a href="index.html" class="play-button">Back to Game List</a></p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const currentScoreElement = document.getElementById('currentScore');
+        const gameOverDiv = document.getElementById('game-over');
+        const finalScoreMsg = document.getElementById('final-score-msg');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.6, lift: -10, velocity: 0 };
+        let pipes = [];
+        let score = 0;
+        let gameInterval;
+        let isGameOver = false;
+
+        function startGame() {
+            bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.6, lift: -12, velocity: 0 };
+            pipes = [];
+            score = 0;
+            isGameOver = false;
+            currentScoreElement.textContent = score;
+            gameOverDiv.style.display = 'none';
+            canvas.style.display = 'block';
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(draw, 20);
+        }
+
+        function draw() {
+            ctx.fillStyle = '#70c5ce';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Bird
+            bird.velocity += bird.gravity;
+            bird.y += bird.velocity;
+
+            if (bird.y + bird.height > canvas.height || bird.y < 0) {
+                endGame();
+            }
+
+            ctx.fillStyle = 'yellow';
+            ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+
+            // Pipes
+            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
+                let pipeGap = 120;
+                let pipeWidth = 40;
+                let minPipeHeight = 50;
+                let maxPipeHeight = canvas.height - pipeGap - minPipeHeight;
+                let topHeight = Math.floor(Math.random() * (maxPipeHeight - minPipeHeight + 1)) + minPipeHeight;
+                pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - pipeGap });
+            }
+
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                pipes[i].x -= 2;
+
+                ctx.fillStyle = 'green';
+                // Top pipe
+                ctx.fillRect(pipes[i].x, 0, 40, pipes[i].top);
+                // Bottom pipe
+                ctx.fillRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
+
+                // Collision
+                if (bird.x + bird.width > pipes[i].x && bird.x < pipes[i].x + 40) {
+                    if (bird.y < pipes[i].top || bird.y + bird.height > canvas.height - pipes[i].bottom) {
+                        endGame();
+                    }
+                }
+
+                if (pipes[i].x + 40 < bird.x && !pipes[i].passed) {
+                    pipes[i].passed = true;
+                    score++;
+                    currentScoreElement.textContent = score;
+                }
+
+                if (pipes[i].x < -40) {
+                    pipes.splice(i, 1);
+                }
+            }
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            isGameOver = true;
+            canvas.style.display = 'none';
+            gameOverDiv.style.display = 'block';
+            finalScoreMsg.textContent = `Game Over! Score: ${score}`;
+        }
+
+        function jump() {
+            if (!isGameOver) bird.velocity = bird.lift;
+        }
+
+        window.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
+        canvas.addEventListener('click', jump);
+        restartBtn.addEventListener('click', startGame);
+
+        startGame();
+
+        // Theme toggle logic
+        const toggleBtn = document.getElementById('toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                toggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            });
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                toggleBtn.textContent = 'Light Mode';
+            }
+        }
+    </script>
+</body>
+</html>

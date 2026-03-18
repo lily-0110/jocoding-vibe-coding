@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hangman-container {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        .word-display {
+            font-size: 2em;
+            letter-spacing: 10px;
+            margin: 20px 0;
+        }
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 5px;
+        }
+        .key {
+            padding: 10px;
+            background: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .key:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .hangman-draw {
+            font-family: monospace;
+            white-space: pre;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="toggle-btn">Dark Mode</button>
+    </div>
+    <div class="container">
+        <h1>Hangman Game</h1>
+        <div class="hangman-container">
+            <div class="hangman-draw" id="hangmanDraw"></div>
+            <div class="word-display" id="wordDisplay"></div>
+            <p>Guesses Left: <span id="guessesLeft">6</span></p>
+            <div class="keyboard" id="keyboard"></div>
+        </div>
+        <div id="game-over" style="display: none;">
+            <h2 id="final-score-msg"></h2>
+            <p id="correct-word"></p>
+            <button id="restart-btn" class="play-button">Play Again</button>
+        </div>
+        <p><a href="index.html" class="play-button">Back to Game List</a></p>
+    </div>
+
+    <script>
+        const wordDisplay = document.getElementById('wordDisplay');
+        const guessesLeftElement = document.getElementById('guessesLeft');
+        const keyboard = document.getElementById('keyboard');
+        const hangmanDraw = document.getElementById('hangmanDraw');
+        const gameOverDiv = document.getElementById('game-over');
+        const finalScoreMsg = document.getElementById('final-score-msg');
+        const correctWordText = document.getElementById('correct-word');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const words = ['JAVASCRIPT', 'HTML', 'CSS', 'PROGRAMMING', 'DEVELOPER', 'GOOGLE', 'CHROME', 'SNAKE', 'MEMORY', 'GAME'];
+        let selectedWord = '';
+        let guessedLetters = [];
+        let mistakes = 0;
+        const maxMistakes = 6;
+
+        const hangmanStages = [
+            `
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========`,
+            `
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========`,
+            `
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========`,
+            `
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========`,
+            `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+      |
+      |
+=========`,
+            `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ /    |
+      |
+=========`,
+            `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ / \\  |
+      |
+=========`
+        ];
+
+        function initGame() {
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+            guessedLetters = [];
+            mistakes = 0;
+            guessesLeftElement.textContent = maxMistakes;
+            gameOverDiv.style.display = 'none';
+            document.querySelector('.hangman-container').style.display = 'block';
+            updateDisplay();
+            createKeyboard();
+        }
+
+        function updateDisplay() {
+            wordDisplay.textContent = selectedWord.split('').map(letter => guessedLetters.includes(letter) ? letter : '_').join('');
+            hangmanDraw.textContent = hangmanStages[mistakes];
+            guessesLeftElement.textContent = maxMistakes - mistakes;
+
+            if (!wordDisplay.textContent.includes('_')) {
+                endGame(true);
+            } else if (mistakes >= maxMistakes) {
+                endGame(false);
+            }
+        }
+
+        function createKeyboard() {
+            keyboard.innerHTML = '';
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+                const button = document.createElement('button');
+                button.textContent = letter;
+                button.classList.add('key');
+                button.addEventListener('click', () => handleGuess(letter, button));
+                keyboard.appendChild(button);
+            });
+        }
+
+        function handleGuess(letter, button) {
+            button.disabled = true;
+            if (selectedWord.includes(letter)) {
+                guessedLetters.push(letter);
+            } else {
+                mistakes++;
+            }
+            updateDisplay();
+        }
+
+        function endGame(won) {
+            document.querySelector('.hangman-container').style.display = 'none';
+            gameOverDiv.style.display = 'block';
+            finalScoreMsg.textContent = won ? 'Congratulations! You Won!' : 'Game Over! You Lost!';
+            correctWordText.textContent = `The word was: ${selectedWord}`;
+        }
+
+        restartBtn.addEventListener('click', initGame);
+        initGame();
+
+        // Theme toggle logic
+        const toggleBtn = document.getElementById('toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                toggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            });
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                toggleBtn.textContent = 'Light Mode';
+            }
+        }
+    </script>
+</body>
+</html>

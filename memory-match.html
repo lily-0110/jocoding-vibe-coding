@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        .card {
+            aspect-ratio: 1;
+            background-color: var(--button-bg);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s;
+        }
+        .card.flipped {
+            background-color: var(--number-bg);
+            transform: rotateY(180deg);
+        }
+        .card.matched {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="toggle-btn">Dark Mode</button>
+    </div>
+    <div class="container">
+        <h1>Memory Match</h1>
+        <p>Moves: <span id="moveCount">0</span></p>
+        <div class="memory-grid" id="grid"></div>
+        <div id="game-over" style="display: none;">
+            <h2 id="final-score-msg"></h2>
+            <button id="restart-btn" class="play-button">Play Again</button>
+        </div>
+        <p><a href="index.html" class="play-button">Back to Game List</a></p>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const moveCountElement = document.getElementById('moveCount');
+        const gameOverDiv = document.getElementById('game-over');
+        const finalScoreMsg = document.getElementById('final-score-msg');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const symbols = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉'];
+        let cards = [...symbols, ...symbols];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let canFlip = true;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function createBoard() {
+            grid.innerHTML = '';
+            shuffle(cards).forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.symbol = symbol;
+                card.dataset.index = index;
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+            moves = 0;
+            matchedPairs = 0;
+            moveCountElement.textContent = moves;
+            gameOverDiv.style.display = 'none';
+            grid.style.display = 'grid';
+        }
+
+        function flipCard() {
+            if (!canFlip || flippedCards.length >= 2 || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+
+            this.classList.add('flipped');
+            this.textContent = this.dataset.symbol;
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                moveCountElement.textContent = moves;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            canFlip = false;
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.symbol === card2.dataset.symbol) {
+                setTimeout(() => {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    matchedPairs++;
+                    flippedCards = [];
+                    canFlip = true;
+                    if (matchedPairs === symbols.length) endGame();
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    card1.textContent = '';
+                    card2.textContent = '';
+                    flippedCards = [];
+                    canFlip = true;
+                }, 1000);
+            }
+        }
+
+        function endGame() {
+            grid.style.display = 'none';
+            gameOverDiv.style.display = 'block';
+            finalScoreMsg.textContent = `Completed in ${moves} moves!`;
+        }
+
+        restartBtn.addEventListener('click', createBoard);
+        createBoard();
+
+        // Theme toggle logic
+        const toggleBtn = document.getElementById('toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                toggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            });
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                toggleBtn.textContent = 'Light Mode';
+            }
+        }
+    </script>
+</body>
+</html>
