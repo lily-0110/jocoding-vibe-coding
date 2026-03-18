@@ -32,7 +32,7 @@
             <h2 id="final-score-msg"></h2>
             <button id="restart-btn" class="play-button">Play Again</button>
         </div>
-        <p>Press Space or Click to Jump</p>
+        <p>Press Space, Up Arrow, W, or Click to Jump</p>
         <p><a href="index.html" class="play-button">Back to Game List</a></p>
     </div>
 
@@ -44,14 +44,14 @@
         const finalScoreMsg = document.getElementById('final-score-msg');
         const restartBtn = document.getElementById('restart-btn');
 
-        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.6, lift: -10, velocity: 0 };
+        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.4, lift: -8, velocity: 0 };
         let pipes = [];
         let score = 0;
         let gameInterval;
         let isGameOver = false;
 
         function startGame() {
-            bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.6, lift: -12, velocity: 0 };
+            bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.4, lift: -8, velocity: 0 };
             pipes = [];
             score = 0;
             isGameOver = false;
@@ -79,7 +79,7 @@
 
             // Pipes
             if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
-                let pipeGap = 120;
+                let pipeGap = 150; // Increased gap from 120 to 150 for easier gameplay
                 let pipeWidth = 40;
                 let minPipeHeight = 50;
                 let maxPipeHeight = canvas.height - pipeGap - minPipeHeight;
@@ -127,7 +127,12 @@
             if (!isGameOver) bird.velocity = bird.lift;
         }
 
-        window.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
+        window.addEventListener('keydown', (e) => { 
+            if (e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                jump();
+                e.preventDefault(); // Prevent scrolling
+            }
+        });
         canvas.addEventListener('click', jump);
         restartBtn.addEventListener('click', startGame);
 

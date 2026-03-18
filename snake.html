@@ -76,6 +76,8 @@
         let score = 0;
         let dx = 0;
         let dy = 0;
+        let nextDx = 0;
+        let nextDy = 0;
         let snake = [{x: 10, y: 10}];
         let food = {x: 5, y: 5};
         let gameInterval;
@@ -84,13 +86,15 @@
             snake = [{x: 10, y: 10}];
             dx = 0;
             dy = 0;
+            nextDx = 0;
+            nextDy = 0;
             score = 0;
             currentScoreElement.textContent = score;
             createFood();
             gameOverDiv.style.display = 'none';
             canvas.style.display = 'block';
             if (gameInterval) clearInterval(gameInterval);
-            gameInterval = setInterval(drawGame, 100);
+            gameInterval = setInterval(drawGame, 150); // Slowed down from 100
         }
 
         function createFood() {
@@ -99,6 +103,8 @@
         }
 
         function drawGame() {
+            dx = nextDx;
+            dy = nextDy;
             updateSnake();
             if (checkGameOver()) return;
 
@@ -155,17 +161,18 @@
         }
 
         function changeDirection(newDx, newDy) {
+            // Prevent 180 degree turns
             if ((newDx === -dx && newDx !== 0) || (newDy === -dy && newDy !== 0)) return;
-            dx = newDx;
-            dy = newDy;
+            nextDx = newDx;
+            nextDy = newDy;
         }
 
         window.addEventListener('keydown', e => {
             switch(e.key) {
-                case 'ArrowUp': changeDirection(0, -1); break;
-                case 'ArrowDown': changeDirection(0, 1); break;
-                case 'ArrowLeft': changeDirection(-1, 0); break;
-                case 'ArrowRight': changeDirection(1, 0); break;
+                case 'ArrowUp': case 'w': case 'W': changeDirection(0, -1); break;
+                case 'ArrowDown': case 's': case 'S': changeDirection(0, 1); break;
+                case 'ArrowLeft': case 'a': case 'A': changeDirection(-1, 0); break;
+                case 'ArrowRight': case 'd': case 'D': changeDirection(1, 0); break;
             }
         });
 
